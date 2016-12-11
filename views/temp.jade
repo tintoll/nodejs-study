@@ -1,3 +1,11 @@
 html
     head
-        title title aa
+        title= _title
+    //들여쓰기로 html 안에 포함된다
+    body
+        h1 hello jade
+        ul
+           -for(var i=0; i<5; i++)      //-를 붙여서 javascript문법을 사용합니다
+                li coding
+        // =을 사용하면 time 변수를 보여줍니다
+        div= time
