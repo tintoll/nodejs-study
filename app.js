@@ -4,8 +4,12 @@
 
 //가장 최초로 진입하는 파일을 메인 애플리케이션 파일
 var express = require('express'); //리턴값이 함수임
-
+var bodyParser = require('body-parser');  //body parser 모듈을 가져옵니다. post의 값을 가져오기 위해서
 var app = express();   //함수를 실행하면 애플리케이션을 리턴함
+
+app.use(express.static('public'));  // 정적파일을 접근할수 있는 위치 지정
+app.use(bodyParser.urlencoded({extended : false})); //body parser를 사용할수있도록 설정
+
 
 app.locals.pretty = true; // 만들어지는 html 을 보기 좋게 하기위해 사용
 
@@ -16,6 +20,20 @@ app.get('/template',function(req,res){
 
     res.render('temp', {time:time, _title:'jade'});   //temp라는 템플릿파일을 렌더링해서 웹페이지에 전송한다는 의미
                                         //두번째 인자로는 변수를 보낼수 있습니다
+});
+
+app.get('/form',function(req,res){
+    res.render('form');
+});
+app.get('/form_receiver',function(req,res){
+    var title = req.query.title;
+    var desc = req.query.text;
+    res.send(title+','+desc);
+});
+app.post('/form_receiver',function(req,res){
+    var title = req.body.title;  //req.body에서 값을 가져옵니다. body가 정의가 안되면 에러가 납니다. body-parser 미들웨어를 정의해줘야합니다.
+    var desc = req.body.text;
+    res.send(title+','+desc);
 });
 
 
@@ -38,7 +56,7 @@ app.get('/topic',function(req,res){
 
     res.send(as);
 });
-*/
+ */
 //Sementic url 형식 사용하기
 app.get('/topic/:id',function(req,res){
     var topics = [
@@ -56,12 +74,13 @@ app.get('/topic/:id',function(req,res){
 
     res.send(as);
 });
+
 app.get('/topic/:id/:mode',function(req,res){
     res.send(req.params.id+','+req.params.mode);
 });
 
 
-app.use(express.static('public'));  // 정적파일을 접근할수 있는 위치 지정
+
 
 app.listen(3000, function(){
     console.log('Connected 3000 port!');
